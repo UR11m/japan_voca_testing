@@ -48,11 +48,29 @@ npm start
 
 브라우저에서 **http://localhost:3000** 으로 접속하면 퀴즈와 문의하기가 모두 동작합니다.
 
+## Vercel 배포
+
+이 프로젝트는 **정적 사이트 + 서버리스 API** 구조로 Vercel에 배포됩니다.
+
+- **루트(/)**: `index.html`, `styles.css`, `quiz.js`가 정적 파일로 제공됩니다.
+- **문의 API**: `/api/contact`는 `api/contact.js` 서버리스 함수로 동작합니다.
+- `vercel.json`에서 `framework: null`, `buildCommand: ""`로 설정해 Express 서버 대신 정적 호스팅이 되도록 했습니다.
+
+**배포 후 문의 이메일을 받으려면** Vercel 대시보드 → 프로젝트 → Settings → Environment Variables에 다음을 추가하세요.
+
+- `RESEND_API_KEY` (필수)
+- `CONTACT_TO_EMAIL` (선택, 기본값: 59274daf@gmail.com)
+- `CONTACT_FROM_EMAIL` (선택, 기본값: onboarding@resend.dev)
+
+GitHub 저장소 연결 후 푸시하면 자동 배포됩니다. **Root Directory**는 비워 두세요.
+
 ## 파일 구성
 
 - `index.html` - 메인 페이지 (퀴즈 + 문의 모달)
 - `styles.css` - 스타일
 - `quiz.js` - 퀴즈 + 문의 폼 클라이언트 로직
-- `server.js` - Express 서버, 정적 파일 제공 + `/api/contact` (Resend 연동)
-- `package.json` - Node 의존성 (express, resend, cors, dotenv)
+- `api/contact.js` - Vercel 서버리스 함수 (문의 시 Resend로 이메일 전송)
+- `vercel.json` - Vercel 배포 설정 (정적 + API)
+- `server.js` - 로컬용 Express 서버 (선택, `npm start` 시 사용)
+- `package.json` - Node 의존성
 - `.env.example` - 환경 변수 예시 (복사해 `.env`로 사용)
